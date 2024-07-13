@@ -30,6 +30,7 @@ h1 svg{
 #header{
     display: grid;
     grid-template-columns: 1fr 1fr;
+    margin: 20px 6px 30px;
 }
 
 #buttons{
@@ -47,4 +48,77 @@ button{
     padding: 5px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+div#game{
+    line-height: 35px;
+    height: 105px;
+    overflow: hidden;
+    position: relative;
+}
+
+div#game:focus{
+    outline: 0;
+}
+
+#words{
+    filter: blur(5px);
+    color: var(--textSecondary);
+}
+
+#game:focus #words{
+    filter: blur(0);
+}
+
+#focus-error{
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    padding-top: 35px;
+}
+
+#game:focus #focus-error{
+    display: none;
+}
+
+
+div.word {
+    display: inline-block;
+    font-family: 'Roboto Mono', monospace;
+    margin: 0 5px;
+}
+
+.letter.correct {
+    color: #fff;
+}
+
+.letter.incorrect {
+    color: #f55;
+}
+
+@keyframes blink {
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+#cursor {
+    display:none;
+    width: 2px;
+    height: 1.6rem;
+    background: var(--textPrimary);
+    position: fixed;
+    top: 200px;
+    left: 525px;
+    animation: blink 1s infinite;
+}
+
+#game:focus #cursor {
+    display: block;
 }
