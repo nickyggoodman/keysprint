@@ -72,6 +72,7 @@ div#game:focus{
 
 #focus-error{
     position: absolute;
+    font-size: 1rem;
     inset: 0;
     text-align: center;
     padding-top: 35px;
@@ -114,8 +115,6 @@ div.word {
     height: 1.6rem;
     background: var(--textPrimary);
     position: fixed;
-    top: 200px;
-    left: 525px;
     animation: blink 1s infinite;
 }
 

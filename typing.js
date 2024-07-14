@@ -11,10 +11,16 @@ function removeClass(el, name){
     el.className = el.className.replace(name, '');
 }
 
+function startCursor() {
+    const cursor = document.getElementById('cursor');
+    const game = document.getElementById('game');
+    cursor.style.top = (game.getBoundingClientRect().top + 4) + 'px';
+    cursor.style.left = (game.getBoundingClientRect().left + 4) + 'px';
+}
+
 function newGame() {
     removeClass(document.getElementById('game'), 'over');
     document.getElementById('info').innerHTML = (gameTime / 1000) + '';
-    window.timer = null;
     return fetch('./common.json')
     .then((res) => res.json())
     .then((json) => {
@@ -26,6 +32,7 @@ function newGame() {
         }
         addClass(document.querySelector('.word'), 'current');
         addClass(document.querySelector('.letter'), 'current');
+        startCursor();
     });
 }
 
@@ -156,13 +163,12 @@ document.getElementById('game').addEventListener('keyup', ev => {
     const nextLetter = document.querySelector('.letter.current');
     const nextWord = document.querySelector('.word.current');
     const cursor = document.getElementById('cursor');
-    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px'
-    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px'
+    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px';
+    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
     
 })
 
 document.getElementById('newGameButton').addEventListener('click', () => {
-    gameOver();
     newGame();
 })
 
