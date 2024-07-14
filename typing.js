@@ -24,15 +24,18 @@ function newGame() {
 
 function formatWord(word) {
     return `<div class="word">
-                <span class="letter">${word.split('').join('</span><span class="letter">')}</span>
-             </div>`;
+                <span class="letter">${word.split('').join('</span><span class="letter">')}</span></div>`;
 }
 
 document.getElementById('game').addEventListener('keyup', ev => {
     const key = ev.key;
+    const currentWord = document.querySelector('.word.current')
     const currentLetter = document.querySelector('.letter.current');
-    const expected = currentLetter.innerHTML;
+    const expected = currentLetter?.innerHTML || ' ';
     const isLetter = key.length === 1 && key !== ' ';
+    const isSpace = key === ' ';
+    const isBackspace = key === 'Backspace';
+    const isFirstLetter = currentLetter === currentWord.firstElementChild;
 
     console.log({key, expected});
 
@@ -40,9 +43,66 @@ document.getElementById('game').addEventListener('keyup', ev => {
         if (currentLetter) {
             addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
             removeClass(currentLetter, 'current');
-            addClass(currentLetter.nextSibling, 'current');
+            if (currentLetter.nextSibling) {
+                addClass(currentLetter.nextSibling, 'current');
+            }
+            
+        } else {
+            const incorrectLetter = document.createElement('span');
+            incorrectLetter.innerHTML = key;
+            incorrectLetter.className = 'letter incorrect extra';
+            currentWord.appendChild(incorrectLetter);
         }
     }
+
+    if (isSpace){
+        if (expected !== ' ') {
+            /* use spread operator to make an array */
+            const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter:not(.correct)')];
+            lettersToInvalidate.forEach(letter => {
+              addClass(letter, 'incorrect');
+            });
+        }
+        removeClass(currentWord, 'current');
+        addClass(currentWord.nextSibling, 'current');
+        if (currentLetter) {
+            removeClass(currentLetter, 'current');
+        }
+        addClass(currentWord.nextSibling.firstElementChild, 'current');
+    }
+
+    if (isBackspace) {
+        if (currentLetter && isFirstLetter) {
+            removeClass(currentWord, 'current');
+            addClass(currentWord.previousSibling, 'current');
+            removeClass(currentLetter, 'current');
+            addClass(currentWord.previousSibling.lastChild, 'current');
+            removeClass(currentWord.previousSibling.lastChild, 'incorrect');
+            removeClass(currentWord.previousSibling.lastChild, 'correct');
+        }
+        if (currentLetter && !isFirstLetter) {
+            removeClass(currentLetter, 'current');
+            addClass(currentLetter.previousSibling, 'current');
+            removeClass(currentLetter.previousSibling, 'incorrect');
+            removeClass(currentLetter.previousSibling, 'correct');
+        }
+        if (!currentLetter) {
+            addClass(currentWord.lastElementChild, 'current');
+            removeClass(currentWord.lastElementChild, 'incorrect');
+            removeClass(currentWord.lastElementChild, 'correct');
+
+        }
+    }
+
+    /* move cursor */
+    const nextLetter = document.querySelector('.letter.current');
+    const nextWord = document.querySelector('.word.current');
+    const cursor = document.getElementById('cursor');
+    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px'
+    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px'
+    
 })
+
+
 
 newGame();
