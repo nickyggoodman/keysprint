@@ -42,11 +42,11 @@ h1 svg{
 }
 
 button{
-    background: rgba(255, 255, 255, .2);
+    background:var(--bgColor);
     border: 0;
-    color: rgba(255, 255, 255, .5);
-    padding: 5px 20px;
-    border-radius: 5px;
+    /* color: rgba(255, 255, 255, .5); */
+    /* padding: 5px 20px; */
+    /* border-radius: 5px; */
     cursor: pointer;
 }
 
@@ -121,7 +121,7 @@ div.word {
     position: fixed;
     animation: blink 1s infinite;
     transition: all;
-    transition-duration: .16s;
+    transition-duration: .024s;
 }
 
 #game:focus #cursor {
@@ -147,3 +147,7 @@ div.word {
     fill: var(--textPrimary);
 }
 
+button svg {
+    width: 2rem;
+    fill: var(--textPrimary);
+}

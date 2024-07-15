@@ -1,4 +1,3 @@
-
 const gameTime = 30 * 1000;
 window.timer = null;
 window.gameStart = null;
@@ -178,7 +177,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
     const nextLetter = document.querySelector('.letter.current');
     const nextWord = document.querySelector('.word.current');
     const cursor = document.getElementById('cursor');
-    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px';
+    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + (nextLetter ? 0 : 4) + 'px';
     cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
     
 })
