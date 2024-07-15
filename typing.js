@@ -23,7 +23,7 @@ function newGame() {
     window.gameStart = null;
     removeClass(document.getElementById('game'), 'over'); 
     document.getElementById('words').style.marginTop = '0px';
-    document.getElementById('info').innerHTML = (gameTime / 1000) + '';
+    document.getElementById('info').innerHTML = (gameTime / 1000) + 's';
     return fetch('./common.json')
     .then((res) => res.json())
     .then((json) => {
@@ -45,7 +45,7 @@ function gameOver() {
         addClass(document.getElementById('game'), 'over');
     }
     const result = getWordsPerMinute();
-    document.getElementById('info').innerHTML = `WPM: ${result}`;
+    document.getElementById('info').innerHTML = `${result}wpm`;
   }
 
 function getWordsPerMinute() {
@@ -97,7 +97,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
             gameOver();
             return;
            }
-           document.getElementById('info').innerHTML = sLeft + ''; 
+           document.getElementById('info').innerHTML = sLeft + 's'; 
 
         }, 1000);
         
@@ -137,13 +137,17 @@ document.getElementById('game').addEventListener('keyup', ev => {
 
     if (isBackspace) {
 
+        if (!currentWord.previousElementSibling && (currentLetter === currentWord.firstElementChild)){
+            return;
+        }
+
         if (currentLetter && isFirstLetter) {
             removeClass(currentWord, 'current');
             addClass(currentWord.previousSibling, 'current');
             removeClass(currentLetter, 'current');
-            addClass(currentWord.previousSibling.lastChild, 'current');
-            removeClass(currentWord.previousSibling.lastChild, 'incorrect');
-            removeClass(currentWord.previousSibling.lastChild, 'correct');
+            // addClass(currentWord.previousSibling.lastChild, 'current');
+            // removeClass(currentWord.previousSibling.lastChild, 'incorrect');
+            // removeClass(currentWord.previousSibling.lastChild, 'correct');
         }
         if (currentLetter && !isFirstLetter) {
             removeClass(currentLetter, 'current');
@@ -152,9 +156,14 @@ document.getElementById('game').addEventListener('keyup', ev => {
             removeClass(currentLetter.previousSibling, 'correct');
         }
         if (!currentLetter) {
-            addClass(currentWord.lastElementChild, 'current');
-            removeClass(currentWord.lastElementChild, 'incorrect');
-            removeClass(currentWord.lastElementChild, 'correct');
+            if (currentWord.lastElementChild.className.includes('extra')){
+                currentWord.lastElementChild.remove();
+            } else {
+                addClass(currentWord.lastElementChild, 'current');
+                removeClass(currentWord.lastElementChild, 'incorrect');
+                removeClass(currentWord.lastElementChild, 'correct');
+            }
+            
         }
     }
 
@@ -173,6 +182,10 @@ document.getElementById('game').addEventListener('keyup', ev => {
     cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
     
 })
+
+addEventListener("resize", (event) => {
+    startCursor();
+});
 
 document.getElementById('newGameButton').addEventListener('click', () => {
     gameOver();

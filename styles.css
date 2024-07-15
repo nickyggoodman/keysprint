@@ -18,7 +18,7 @@ body{
 }
 
 main{
-    width: 600px;
+    width: 66vw;
     margin: 50px auto;
 }
 
@@ -97,6 +97,10 @@ div.word {
     color: #f55;
 }
 
+.letter.incorrect.extra {
+    color: rgb(165, 70, 70);
+}
+
 @keyframes blink {
     0%{
         opacity: 1;
@@ -116,6 +120,8 @@ div.word {
     background: var(--textPrimary);
     position: fixed;
     animation: blink 1s infinite;
+    transition: all;
+    transition-duration: .16s;
 }
 
 #game:focus #cursor {
