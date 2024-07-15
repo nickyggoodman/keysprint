@@ -1,6 +1,7 @@
 const gameTime = 30 * 1000;
 window.timer = null;
 window.gameStart = null;
+ctrlKeyPress = false;
 
 function addClass(el, name){
     el.className += ' '+name;
@@ -66,6 +67,38 @@ function formatWord(word) {
     return `<div class="word">
                 <span class="letter">${word.split('').join('</span><span class="letter">')}</span></div>`;
 }
+
+function moveCursor() {
+        /* move cursor */
+        const nextLetter = document.querySelector('.letter.current');
+        const nextWord = document.querySelector('.word.current');
+        const cursor = document.getElementById('cursor');
+        cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + (nextLetter ? 0 : 4) + 'px';
+        cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
+}
+
+document.getElementById('game').addEventListener('keydown', ev => {
+    const key = ev.key;
+    const currentWord = document.querySelector('.word.current');
+    const currentLetter = document.querySelector('.letter.current');
+
+    if (ev.ctrlKey) {
+        controlKeyPress = true;
+        if (ev.key === 'Backspace') {
+            const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter')];
+            lettersToInvalidate.forEach(letter => {
+                removeClass(letter, 'correct');
+            });
+            addClass(currentWord.firstElementChild, 'current');
+            removeClass(currentLetter, 'current');
+            moveCursor();
+        }
+    } else {
+        controlKeyPress = false;
+    }
+
+    console.log({key});
+});
 
 document.getElementById('game').addEventListener('keyup', ev => {
     const key = ev.key;
@@ -134,12 +167,12 @@ document.getElementById('game').addEventListener('keyup', ev => {
         addClass(currentWord.nextSibling.firstElementChild, 'current');
     }
 
-    if (isBackspace) {
+    if (isBackspace && !controlKeyPress) {
 
         if (!currentWord.previousElementSibling && (currentLetter === currentWord.firstElementChild)){
             return;
         }
-
+        
         if (currentLetter && isFirstLetter) {
             removeClass(currentWord, 'current');
             addClass(currentWord.previousSibling, 'current');
@@ -173,14 +206,9 @@ document.getElementById('game').addEventListener('keyup', ev => {
         words.style.marginTop = (margin - 35) + 'px';
     } 
 
-    /* move cursor */
-    const nextLetter = document.querySelector('.letter.current');
-    const nextWord = document.querySelector('.word.current');
-    const cursor = document.getElementById('cursor');
-    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + (nextLetter ? 0 : 4) + 'px';
-    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
+    moveCursor();
     
-})
+});
 
 addEventListener("resize", (event) => {
     startCursor();
