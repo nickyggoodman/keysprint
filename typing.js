@@ -19,7 +19,10 @@ function startCursor() {
 }
 
 function newGame() {
-    removeClass(document.getElementById('game'), 'over');
+    window.timer = null;
+    window.gameStart = null;
+    removeClass(document.getElementById('game'), 'over'); 
+    document.getElementById('words').style.marginTop = '0px';
     document.getElementById('info').innerHTML = (gameTime / 1000) + '';
     return fetch('./common.json')
     .then((res) => res.json())
@@ -38,9 +41,12 @@ function newGame() {
 
 function gameOver() {
     clearInterval(window.timer);
-    addClass(document.getElementById('game'), 'over');
-    document.getElementById('info').innerHTML = `WPM: ${getWordsPerMinute()}`
-}
+    if (!document.getElementById('game').className.includes('over')){
+        addClass(document.getElementById('game'), 'over');
+    }
+    const result = getWordsPerMinute();
+    document.getElementById('info').innerHTML = `WPM: ${result}`;
+  }
 
 function getWordsPerMinute() {
     const words = [...document.querySelectorAll('.word')];
@@ -130,6 +136,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
     }
 
     if (isBackspace) {
+
         if (currentLetter && isFirstLetter) {
             removeClass(currentWord, 'current');
             addClass(currentWord.previousSibling, 'current');
@@ -148,7 +155,6 @@ document.getElementById('game').addEventListener('keyup', ev => {
             addClass(currentWord.lastElementChild, 'current');
             removeClass(currentWord.lastElementChild, 'incorrect');
             removeClass(currentWord.lastElementChild, 'correct');
-
         }
     }
 
@@ -157,7 +163,7 @@ document.getElementById('game').addEventListener('keyup', ev => {
         const words = document.getElementById('words');
         const margin = parseInt(words.style.marginTop || '0px');
         words.style.marginTop = (margin - 35) + 'px';
-    }
+    } 
 
     /* move cursor */
     const nextLetter = document.querySelector('.letter.current');
@@ -169,7 +175,8 @@ document.getElementById('game').addEventListener('keyup', ev => {
 })
 
 document.getElementById('newGameButton').addEventListener('click', () => {
+    gameOver();
     newGame();
-})
+  });
 
 newGame();

@@ -135,3 +135,9 @@ div.word {
     display: none;
 }
 
+#focus-error svg {
+    width: .75rem;
+    position: relative;
+    fill: var(--textPrimary);
+}
+
