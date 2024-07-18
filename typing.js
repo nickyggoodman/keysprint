@@ -81,13 +81,25 @@ document.getElementById('game').addEventListener('keydown', ev => {
     const key = ev.key;
     const currentWord = document.querySelector('.word.current');
     const currentLetter = document.querySelector('.letter.current');
+    const isFirstLetter = currentLetter === currentWord.firstElementChild;
 
     if (ev.ctrlKey) {
         controlKeyPress = true;
-        if (ev.key === 'Backspace') {
+        if (ev.key === 'Backspace' ) {
+            if (isFirstLetter) {
+                removeClass(currentWord, 'current');
+                removeClass(currentLetter, 'current');
+                addClass(currentWord.previousElementSibling, 'current');
+                addClass(currentWord.previousElementSibling.firstElementChild, 'current');
+                
+            }
             const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter')];
             lettersToInvalidate.forEach(letter => {
                 removeClass(letter, 'correct');
+            });
+            const lettersToRemove = [...document.querySelectorAll('.word.current .letter.extra')];
+            lettersToRemove.forEach(letter => {
+                letter.remove();
             });
             addClass(currentWord.firstElementChild, 'current');
             removeClass(currentLetter, 'current');
