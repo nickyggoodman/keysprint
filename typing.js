@@ -69,7 +69,6 @@ function formatWord(word) {
 }
 
 function moveCursor() {
-        /* move cursor */
         const nextLetter = document.querySelector('.letter.current');
         const nextWord = document.querySelector('.word.current');
         const cursor = document.getElementById('cursor');
@@ -77,42 +76,8 @@ function moveCursor() {
         cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
 }
 
+
 document.getElementById('game').addEventListener('keydown', ev => {
-    const key = ev.key;
-    const currentWord = document.querySelector('.word.current');
-    const currentLetter = document.querySelector('.letter.current');
-    const isFirstLetter = currentLetter === currentWord.firstElementChild;
-
-    if (ev.ctrlKey) {
-        controlKeyPress = true;
-        if (ev.key === 'Backspace' ) {
-            if (isFirstLetter) {
-                removeClass(currentWord, 'current');
-                removeClass(currentLetter, 'current');
-                addClass(currentWord.previousElementSibling, 'current');
-                addClass(currentWord.previousElementSibling.firstElementChild, 'current');
-                
-            }
-            const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter')];
-            lettersToInvalidate.forEach(letter => {
-                removeClass(letter, 'correct');
-            });
-            const lettersToRemove = [...document.querySelectorAll('.word.current .letter.extra')];
-            lettersToRemove.forEach(letter => {
-                letter.remove();
-            });
-            addClass(currentWord.firstElementChild, 'current');
-            removeClass(currentLetter, 'current');
-            moveCursor();
-        }
-    } else {
-        controlKeyPress = false;
-    }
-
-    console.log({key});
-});
-
-document.getElementById('game').addEventListener('keyup', ev => {
     const key = ev.key;
     const currentWord = document.querySelector('.word.current')
     const currentLetter = document.querySelector('.letter.current');
@@ -179,35 +144,59 @@ document.getElementById('game').addEventListener('keyup', ev => {
         addClass(currentWord.nextSibling.firstElementChild, 'current');
     }
 
-    if (isBackspace && !controlKeyPress) {
+    if (isBackspace) {
 
-        if (!currentWord.previousElementSibling && (currentLetter === currentWord.firstElementChild)){
-            return;
-        }
-        
-        if (currentLetter && isFirstLetter) {
-            removeClass(currentWord, 'current');
-            addClass(currentWord.previousSibling, 'current');
-            removeClass(currentLetter, 'current');
-            // addClass(currentWord.previousSibling.lastChild, 'current');
-            // removeClass(currentWord.previousSibling.lastChild, 'incorrect');
-            // removeClass(currentWord.previousSibling.lastChild, 'correct');
-        }
-        if (currentLetter && !isFirstLetter) {
-            removeClass(currentLetter, 'current');
-            addClass(currentLetter.previousSibling, 'current');
-            removeClass(currentLetter.previousSibling, 'incorrect');
-            removeClass(currentLetter.previousSibling, 'correct');
-        }
-        if (!currentLetter) {
-            if (currentWord.lastElementChild.className.includes('extra')){
-                currentWord.lastElementChild.remove();
-            } else {
-                addClass(currentWord.lastElementChild, 'current');
-                removeClass(currentWord.lastElementChild, 'incorrect');
-                removeClass(currentWord.lastElementChild, 'correct');
-            }
+        if (ev.ctrlKey) {
             
+            if (isFirstLetter) {
+                removeClass(currentWord, 'current');
+                removeClass(currentLetter, 'current');
+                addClass(currentWord.previousElementSibling, 'current');
+                addClass(currentWord.previousElementSibling.firstElementChild, 'current');
+                
+            }
+            const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter')];
+            lettersToInvalidate.forEach(letter => {
+                removeClass(letter, 'incorrect');
+                removeClass(letter, 'correct');
+                
+            });
+            const lettersToRemove = [...document.querySelectorAll('.word.current .letter.extra')];
+            lettersToRemove.forEach(letter => {
+                letter.remove();
+            });
+            addClass(currentWord.firstElementChild, 'current');
+            // check if we are at the last letter
+            if (currentLetter) {
+                removeClass(currentLetter, 'current');
+            } 
+            
+            
+            
+        } else {
+            if (!currentWord.previousElementSibling && (currentLetter === currentWord.firstElementChild)){
+                return;
+            }
+            if (currentLetter && isFirstLetter) {
+                removeClass(currentWord, 'current');
+                addClass(currentWord.previousSibling, 'current');
+                removeClass(currentLetter, 'current');
+            }
+            if (currentLetter && !isFirstLetter) {
+                removeClass(currentLetter, 'current');
+                addClass(currentLetter.previousSibling, 'current');
+                removeClass(currentLetter.previousSibling, 'incorrect');
+                removeClass(currentLetter.previousSibling, 'correct');
+            }
+            if (!currentLetter) {
+                if (currentWord.lastElementChild.className.includes('extra')){
+                    currentWord.lastElementChild.remove();
+                } else {
+                    addClass(currentWord.lastElementChild, 'current');
+                    removeClass(currentWord.lastElementChild, 'incorrect');
+                    removeClass(currentWord.lastElementChild, 'correct');
+                }
+            }
         }
     }
 
