@@ -1,7 +1,6 @@
 const gameTime = 30 * 1000;
 window.timer = null;
 window.gameStart = null;
-ctrlKeyPress = false;
 
 function addClass(el, name){
     el.className += ' '+name;
